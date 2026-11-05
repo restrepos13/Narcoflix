@@ -22,40 +22,40 @@ const SERIE = {
   portada: archivo('episodio-1.jpg'), // imagen fija mientras carga el video
   episodios: [
     {
-      titulo: 'La tienda de mi papá',
+      titulo: 'La sombra en la cancha',
       duracion: '42 min',
       inicio: 0,
       miniatura: archivo('episodio-1.jpg'),
       video: archivo('capitulo-1.mp4'),
       resumen:
-        '"Mi papá abrió la tienda con lo que ahorró toda la vida. Un día dejó de pagar la vacuna porque ya no le alcanzaba. Yo estaba detrás del mostrador cuando llegaron."',
+        '"Estaba solo en la cancha cuando llegó con la caja: unos tenis blancos de paquete. No me pidió nada a cambio. Eso fue lo que más me gustó, y eso fue lo que me debió asustar."',
     },
     {
-      titulo: 'La esquina',
+      titulo: 'La oferta',
       duracion: '45 min',
       inicio: 0,
       miniatura: archivo('episodio-2.jpg'),
       video: archivo('capitulo-2.mp4'),
       resumen:
-        '"A los doce, los del combo me ofrecían plata por vigilar la esquina. Varios de mis amigos dijeron que sí. De ese grupo solo quedamos dos."',
+        '"Después de los tenis vino la oferta: pararme en una esquina y avisar quién entraba a la cuadra. La plata llegaba fácil y yo la ponía en la mesa como un trofeo. Mi mamá nunca la recogió."',
     },
     {
-      titulo: 'Fronteras invisibles',
+      titulo: 'La deuda invisible',
       duracion: '39 min',
       inicio: 0,
       miniatura: archivo('episodio-3.jpg'),
       video: archivo('capitulo-3.mp4'),
       resumen:
-        '"Había calles que no podía cruzar. Mi mamá caminaba media hora más para ir al trabajo porque el camino corto era de otro combo."',
+        '"Mi hermana me lloró en la sala y mi abuelo me dejó de hablar. Después el jefe desapareció y empezaron a llamarme para cobrarme lo que se había perdido. Yo no tenía con qué pagar."',
     },
     {
-      titulo: 'Rimas para no olvidar',
+      titulo: 'Huir para contarlo',
       duracion: '47 min',
       inicio: 0,
       miniatura: archivo('episodio-4.jpg'),
       video: archivo('capitulo-4.mp4'),
       resumen:
-        '"Empecé a escribir para sacarme la rabia. Hoy les enseño rap a los pelados del barrio, para que escojan otro camino y para que nadie olvide los nombres."',
+        '"Vi a mi hermano irse con el morral, sin despedirse. Los tenis quedaron tirados en un andén. Por eso hablo: para que ningún pelado más se crea el cuento de la plata fácil."',
     },
   ],
 }
