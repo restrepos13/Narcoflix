@@ -1,0 +1,518 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+// Videos e imágenes están en la carpeta public/
+const BASE = '/'
+const archivo = (nombre) => BASE + nombre
+
+// Todas las personas y testimonios son ficticios.
+
+// 👉 La ÚNICA serie que se puede abrir: 4 capítulos con el testimonio de Andrés.
+//    Cada capítulo puede tener su propio video; por ahora todos usan video-3.mp4.
+const SERIE = {
+  titulo: 'Voces de Colombia',
+  etiqueta: 'SERIE DOCUMENTAL',
+  protagonista: 'Andrés, 27 años',
+  lugar: 'Comuna 13',
+  sinopsis:
+    'Andrés tenía nueve años cuando mataron a su papá por no pagar la vacuna de la tienda. En cuatro capítulos cuenta cómo fue crecer con miedo en la Comuna 13 y cómo el rap se volvió su forma de recordar.',
+  coincidencia: '98% para ti',
+  anio: '2026',
+  clasificacion: '16+',
+  video: archivo('video-3.mp4'),
+  portada: archivo('episodio-1.jpg'), // imagen fija mientras carga el video
+  episodios: [
+    {
+      titulo: 'La tienda de mi papá',
+      duracion: '42 min',
+      inicio: 0,
+      miniatura: archivo('episodio-1.jpg'),
+      video: archivo('capitulo-1.mp4'),
+      resumen:
+        '"Mi papá abrió la tienda con lo que ahorró toda la vida. Un día dejó de pagar la vacuna porque ya no le alcanzaba. Yo estaba detrás del mostrador cuando llegaron."',
+    },
+    {
+      titulo: 'La esquina',
+      duracion: '45 min',
+      inicio: 0,
+      miniatura: archivo('episodio-2.jpg'),
+      video: archivo('capitulo-2.mp4'),
+      resumen:
+        '"A los doce, los del combo me ofrecían plata por vigilar la esquina. Varios de mis amigos dijeron que sí. De ese grupo solo quedamos dos."',
+    },
+    {
+      titulo: 'Fronteras invisibles',
+      duracion: '39 min',
+      inicio: 0,
+      miniatura: archivo('episodio-3.jpg'),
+      video: archivo('capitulo-3.mp4'),
+      resumen:
+        '"Había calles que no podía cruzar. Mi mamá caminaba media hora más para ir al trabajo porque el camino corto era de otro combo."',
+    },
+    {
+      titulo: 'Rimas para no olvidar',
+      duracion: '47 min',
+      inicio: 13,
+      miniatura: archivo('episodio-4.jpg'),
+      video: archivo('video-3.mp4'),
+      resumen:
+        '"Empecé a escribir para sacarme la rabia. Hoy les enseño rap a los pelados del barrio, para que escojan otro camino y para que nadie olvide los nombres."',
+    },
+  ],
+}
+
+// Testimonios que se muestran pero NO se abren
+const TESTIMONIOS_VIDEO = [
+  {
+    nombre: 'Camila, 34 años',
+    lugar: 'Hija de periodista, Laureles',
+    titulo: 'Lo que quedó de mi papá',
+    testimonio: '"Unas fotos, su cadena y su anillo: eso fue lo que nos devolvieron. Mi papá era periodista y escribió lo que nadie se atrevía. Yo tenía ocho años."',
+    portada: archivo('fotos.jpg'),
+    video: archivo('video-1.mp4'),
+  },
+  {
+    nombre: 'Jairo, 38 años',
+    lugar: 'Vendedor de libros, Centro',
+    titulo: 'Pagar por un pedazo de andén',
+    testimonio: '"Cada sábado llegaban a cobrar la vacuna por el pedazo de andén donde vendo libros. El que no pagaba, al otro día no volvía a abrir."',
+    portada: archivo('libros.jpg'),
+    video: archivo('video-2.mp4'),
+  },
+  {
+    nombre: 'Mateo y Julián, 31 y 34 años',
+    lugar: 'Hermanos, Manrique',
+    titulo: 'Nos reclutaron de niños',
+    testimonio: '"A los trece nos ofrecieron tenis y un celular. Mi hermano salió primero y volvió por mí. Todavía cruzamos ese puente pensando en los que no salieron."',
+    portada: archivo('puente.jpg'),
+    video: archivo('video-4.mp4'),
+  },
+]
+
+const TESTIMONIOS_FOTO = [
+  {
+    nombre: 'Gloria, 52 años',
+    lugar: 'Madre buscadora, Aranjuez',
+    titulo: 'La madre que no deja de buscar',
+    testimonio: '"A mi hijo le dijeron que era un trabajito fácil. Esa fue la última vez que lo vi. Llevo quince años buscándolo."',
+    portada: archivo('maletin.jpg'),
+  },
+  {
+    nombre: 'Lucía, 70 años',
+    lugar: 'Viuda de un juez, El Poblado',
+    titulo: 'La última mañana',
+    testimonio: '"Mi esposo era juez. Leía el periódico cada mañana en esa mesa. Le advirtieron que no firmara aquel caso, y lo firmó."',
+    portada: archivo('patron.jpg'),
+  },
+  {
+    nombre: 'Rodrigo, 58 años',
+    lugar: 'Expolicía, Belén',
+    titulo: 'De mi promoción quedamos tres',
+    testimonio: '"En los noventa ponían precio a cada uno de nosotros. Salía a patrullar sin saber si iba a volver a ver a mis hijas."',
+    portada: archivo('selva.jpg'),
+  },
+]
+
+function Intro({ onFin }) {
+  useEffect(() => {
+    const t = setTimeout(onFin, 4000)
+    // Cualquier tecla salta la intro; mientras dura no se puede hacer scroll
+    window.addEventListener('keydown', onFin)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener('keydown', onFin)
+      document.body.style.overflow = ''
+    }
+  }, [onFin])
+
+  return (
+    <div
+      onClick={onFin}
+      className="intro fixed inset-0 z-[100] flex cursor-pointer items-center justify-center overflow-hidden bg-black"
+    >
+      <div className="intro-rayos absolute inset-0" />
+      <span className="intro-n relative select-none">N</span>
+      <p className="intro-marca absolute bottom-[16%] text-sm font-bold text-red-600 md:text-lg">NARCOFLIX</p>
+    </div>
+  )
+}
+
+function Navbar() {
+  const [solido, setSolido] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setSolido(window.scrollY > 40)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <nav
+      className={`fixed top-0 z-40 flex w-full items-center justify-between px-4 py-4 transition-colors duration-500 md:px-12 ${
+        solido ? 'bg-[#141414]' : 'bg-gradient-to-b from-black/80 to-transparent'
+      }`}
+    >
+      <div className="flex items-center gap-8">
+        <span className="text-2xl font-black tracking-tighter text-red-600 md:text-3xl">NARCOFLIX</span>
+        <ul className="hidden gap-5 text-sm text-gray-200 md:flex">
+          <li className="font-semibold text-white">Inicio</li>
+          <li className="cursor-default hover:text-gray-400">Series</li>
+          <li className="cursor-default hover:text-gray-400">Testimonios</li>
+          <li className="cursor-default hover:text-gray-400">Mi lista</li>
+        </ul>
+      </div>
+      <div className="flex items-center gap-4">
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </svg>
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0" />
+        </svg>
+        <div className="h-8 w-8 rounded bg-gradient-to-br from-amber-400 to-red-700" />
+      </div>
+    </nav>
+  )
+}
+
+function Hero({ onPlay, onInfo, activo }) {
+  const headerRef = useRef(null)
+  const videoRef = useRef(null)
+  const [silencio, setSilencio] = useState(true)
+  const [visible, setVisible] = useState(true)
+
+  // Pausa el video de fondo cuando sale de la pantalla para ahorrar batería y datos
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.2 })
+    obs.observe(headerRef.current)
+    return () => obs.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    if (activo && visible) v.play().catch(() => {})
+    else v.pause()
+  }, [activo, visible])
+
+  const alternarSonido = () => {
+    const v = videoRef.current
+    if (!v) return
+    v.muted = !v.muted
+    setSilencio(v.muted)
+  }
+
+  return (
+    <header ref={headerRef} className="relative h-[85vh] min-h-[520px] w-full overflow-hidden md:h-[95vh]">
+      <video
+        ref={videoRef}
+        className="absolute inset-0 h-full w-full object-cover"
+        src={SERIE.video}
+        poster={SERIE.portada}
+        preload="auto"
+        muted
+        loop
+        playsInline
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#141414] to-transparent" />
+
+      <div className="absolute bottom-[20%] left-4 max-w-xl pr-4 md:left-12">
+        <p className="mb-2 flex items-center gap-2 text-xs font-bold tracking-[0.3em] text-gray-200">
+          <span className="text-2xl font-black tracking-tighter text-red-600">N</span>
+          {SERIE.etiqueta}
+        </p>
+        <h1 className="text-5xl font-black uppercase leading-none tracking-tight drop-shadow-lg md:text-7xl">{SERIE.titulo}</h1>
+        <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
+          <span className="font-semibold text-green-500">{SERIE.coincidencia}</span>
+          <span className="text-gray-300">{SERIE.anio}</span>
+          <span className="border border-gray-400 px-1.5 text-xs text-gray-300">{SERIE.clasificacion}</span>
+          <span className="text-gray-300">{SERIE.episodios.length} episodios</span>
+          <span className="rounded border border-gray-400 px-1.5 text-xs text-gray-300">HD</span>
+        </div>
+        <p className="mt-4 line-clamp-4 text-sm text-gray-100 drop-shadow md:line-clamp-none md:text-lg">{SERIE.sinopsis}</p>
+        <div className="mt-6 flex gap-3">
+          <button
+            onClick={onPlay}
+            className="flex items-center gap-2 rounded bg-white px-6 py-2 font-bold text-black transition hover:bg-white/75 md:px-8 md:py-3 md:text-lg"
+          >
+            <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4v16l14-8z" /></svg>
+            Reproducir
+          </button>
+          <button
+            onClick={onInfo}
+            className="flex items-center gap-2 rounded bg-gray-500/60 px-6 py-2 font-bold text-white transition hover:bg-gray-500/40 md:px-8 md:py-3 md:text-lg"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 16v-4M12 8h.01" />
+            </svg>
+            Episodios
+          </button>
+        </div>
+      </div>
+
+      <button
+        onClick={alternarSonido}
+        aria-label={silencio ? 'Activar sonido' : 'Silenciar'}
+        className="absolute right-4 top-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-black/30 hover:bg-white/10 md:bottom-[22%] md:right-12 md:top-auto"
+      >
+        {silencio ? (
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M11 5 6 9H2v6h4l5 4zM23 9l-6 6M17 9l6 6" />
+          </svg>
+        ) : (
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14" />
+          </svg>
+        )}
+      </button>
+    </header>
+  )
+}
+
+// Tarjeta de testimonio. Solo abre algo si recibe onPlay.
+// Si tiene portada se ve la foto, y al pasar el ratón se reproduce su video en silencio.
+function Tarjeta({ t, onPlay, insignia }) {
+  const videoRef = useRef(null)
+  const Contenedor = onPlay ? 'button' : 'div'
+
+  return (
+    <Contenedor
+      onClick={onPlay}
+      onMouseEnter={() => videoRef.current?.play().catch(() => {})}
+      onMouseLeave={() => videoRef.current?.pause()}
+      className={`group relative aspect-video w-[75vw] flex-none overflow-hidden rounded-md bg-zinc-900 text-left transition duration-300 hover:z-10 hover:scale-105 sm:w-[45vw] md:w-auto ${
+        onPlay ? 'cursor-pointer ring-red-600 hover:ring-2 focus-visible:ring-2 focus-visible:outline-none' : 'cursor-default'
+      }`}
+    >
+      {t.portada && (
+        <img
+          src={t.portada}
+          alt=""
+          width="960"
+          height="540"
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
+      {/* El video solo se descarga cuando pasas el ratón por encima */}
+      {t.video && (
+        <video
+          ref={videoRef}
+          src={`${t.video}#t=2`}
+          muted
+          loop
+          playsInline
+          preload="none"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+            t.portada ? 'opacity-0 group-hover:opacity-100' : ''
+          }`}
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+      <span className="absolute left-2 top-1 text-lg font-black text-red-600">N</span>
+      {insignia && (
+        <span className="absolute right-2 top-2 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold uppercase">{insignia}</span>
+      )}
+
+      <div className="absolute inset-x-0 bottom-0 p-3">
+        <p className="text-base font-black uppercase leading-tight tracking-tight md:text-lg">{t.titulo}</p>
+        <p className="text-xs text-gray-300">
+          {t.nombre} · {t.lugar}
+        </p>
+        <p className="mt-1 line-clamp-3 max-h-0 text-xs italic text-gray-200 opacity-0 transition-all duration-300 group-hover:max-h-20 group-hover:opacity-100">
+          {t.testimonio}
+        </p>
+      </div>
+
+      {onPlay && (
+        <div className="absolute left-1/2 top-[40%] flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-black/60 transition group-hover:scale-110">
+          <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4v16l14-8z" /></svg>
+        </div>
+      )}
+    </Contenedor>
+  )
+}
+
+function Fila({ titulo, children }) {
+  return (
+    <section className="mb-6 md:mb-10">
+      <h2 className="mb-1 px-4 text-lg font-semibold md:px-12 md:text-2xl">{titulo}</h2>
+      {/* En celular se desliza de lado; en pantallas grandes se ven todas en cuadrícula */}
+      <div className="no-scrollbar flex snap-x gap-3 overflow-x-auto px-4 py-6 md:grid md:grid-cols-4 md:overflow-visible md:px-12">
+        {children}
+      </div>
+    </section>
+  )
+}
+
+// Ficha de la serie: reproductor arriba y lista de los 4 episodios abajo
+function ModalSerie({ inicial, autoplay, onClose }) {
+  const videoRef = useRef(null)
+  const [actual, setActual] = useState(inicial)
+  const [reproducir, setReproducir] = useState(autoplay)
+  const episodio = SERIE.episodios[actual]
+
+  useEffect(() => {
+    if (!reproducir) return
+    // Intenta con sonido; si el navegador lo bloquea, arranca en silencio
+    const v = videoRef.current
+    v?.play().catch(() => {
+      v.muted = true
+      v.play().catch(() => {})
+    })
+  }, [actual, reproducir])
+
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [onClose])
+
+  const elegir = (i) => {
+    setActual(i)
+    setReproducir(true)
+    videoRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={SERIE.titulo}
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/85 px-2 py-6 md:py-10"
+      onClick={onClose}
+    >
+      <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-lg bg-[#181818] shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <button
+          onClick={onClose}
+          aria-label="Cerrar"
+          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/70 text-xl hover:bg-black"
+        >
+          ✕
+        </button>
+        <video
+          key={actual}
+          ref={videoRef}
+          className="aspect-video w-full bg-black"
+          src={`${episodio.video}#t=${episodio.inicio}`}
+          poster={episodio.miniatura}
+          preload="metadata"
+          controls
+          playsInline
+        />
+
+        <div className="p-5 md:p-8">
+          <div className="flex flex-wrap items-center gap-3 text-sm">
+            <span className="font-semibold text-green-500">{SERIE.coincidencia}</span>
+            <span className="text-gray-400">{SERIE.anio}</span>
+            <span className="border border-gray-500 px-1.5 text-xs text-gray-400">{SERIE.clasificacion}</span>
+            <span className="text-gray-400">{SERIE.episodios.length} episodios</span>
+          </div>
+          <h3 className="mt-2 text-3xl font-black uppercase">{SERIE.titulo}</h3>
+          <p className="mt-1 font-semibold">
+            T1:E{actual + 1} «{episodio.titulo}»
+          </p>
+          <p className="mt-2 text-gray-300">{SERIE.sinopsis}</p>
+          <p className="mt-2 text-sm text-gray-500">
+            Protagonista: <span className="text-gray-300">{SERIE.protagonista}, {SERIE.lugar}</span>
+          </p>
+
+          <div className="mt-8 flex items-center justify-between">
+            <h4 className="text-xl font-bold md:text-2xl">Episodios</h4>
+            <span className="rounded border border-gray-600 bg-zinc-800 px-3 py-1 text-sm">Temporada 1</span>
+          </div>
+
+          <ol className="mt-4 divide-y divide-zinc-700 border-t border-zinc-700">
+            {SERIE.episodios.map((ep, i) => (
+              <li key={ep.titulo}>
+                <button
+                  onClick={() => elegir(i)}
+                  className={`group flex w-full items-center gap-3 rounded px-2 py-4 text-left transition md:gap-5 md:px-4 ${
+                    i === actual ? 'bg-zinc-800' : 'hover:bg-zinc-800/60'
+                  }`}
+                >
+                  <span className="w-6 flex-none text-center text-xl text-gray-400 md:text-2xl">{i + 1}</span>
+                  <div className="relative aspect-video w-28 flex-none overflow-hidden rounded md:w-36">
+                    <img src={ep.miniatura} alt="" width="960" height="540" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
+                      <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4v16l14-8z" /></svg>
+                    </div>
+                    {i === actual && <div className="absolute bottom-0 left-0 h-1 w-1/3 bg-red-600" />}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <p className="font-semibold">{ep.titulo}</p>
+                      <span className="flex-none text-sm text-gray-400">{ep.duracion}</span>
+                    </div>
+                    <p className="mt-1 line-clamp-3 text-sm text-gray-400">{ep.resumen}</p>
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function Footer() {
+  return (
+    <footer className="mx-auto max-w-5xl px-4 py-12 text-sm text-gray-500 md:px-12">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {['Preguntas frecuentes', 'Centro de ayuda', 'Términos de uso', 'Privacidad'].map((t) => (
+          <span key={t} className="cursor-default hover:underline">{t}</span>
+        ))}
+      </div>
+      <p className="mt-8">
+        © 2026 Narcoflix. Las personas y los testimonios de esta página son ficticios, inspirados en las historias de las víctimas
+        del narcotráfico en Medellín.
+      </p>
+    </footer>
+  )
+}
+
+export default function App() {
+  const [intro, setIntro] = useState(true)
+  const [serie, setSerie] = useState(null) // null = cerrada; { autoplay } = abierta
+  const terminarIntro = useCallback(() => setIntro(false), [])
+  const cerrar = useCallback(() => setSerie(null), [])
+
+  const tarjetaSerie = {
+    titulo: SERIE.titulo,
+    nombre: SERIE.protagonista,
+    lugar: SERIE.lugar,
+    testimonio: SERIE.episodios[0].resumen,
+    portada: SERIE.portada,
+  }
+
+  return (
+    <div className="min-h-screen bg-[#141414] text-white">
+      {intro && <Intro onFin={terminarIntro} />}
+      <Navbar />
+      <Hero onPlay={() => setSerie({ autoplay: true })} onInfo={() => setSerie({ autoplay: false })} activo={!intro && !serie} />
+      <main className="relative z-10 -mt-20 md:-mt-28">
+        <Fila titulo="Testimonios en video">
+          <Tarjeta t={tarjetaSerie} insignia={`${SERIE.episodios.length} episodios`} onPlay={() => setSerie({ autoplay: false })} />
+          {TESTIMONIOS_VIDEO.map((t) => (
+            <Tarjeta key={t.nombre} t={t} />
+          ))}
+        </Fila>
+        <Fila titulo="Más voces de Colombia">
+          {TESTIMONIOS_FOTO.map((t) => (
+            <Tarjeta key={t.nombre} t={t} />
+          ))}
+        </Fila>
+      </main>
+      <Footer />
+      {serie && <ModalSerie inicial={0} autoplay={serie.autoplay} onClose={cerrar} />}
+    </div>
+  )
+}
