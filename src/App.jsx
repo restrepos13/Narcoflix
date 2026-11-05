@@ -11,10 +11,10 @@ const archivo = (nombre) => BASE + nombre
 const SERIE = {
   titulo: 'Voces de Colombia',
   etiqueta: 'SERIE DOCUMENTAL',
-  protagonista: 'Andrés, 27 años',
+  protagonista: 'Santiago, 17 años',
   lugar: 'Comuna 13',
   sinopsis:
-    'Andrés tenía nueve años cuando mataron a su papá por no pagar la vacuna de la tienda. En cuatro capítulos cuenta cómo fue crecer con miedo en la Comuna 13 y cómo el rap se volvió su forma de recordar.',
+    'Unos tenis blancos de paquete y la ilusión de ser millonario antes de los veinte llevan a Santi, de 17 años, a vigilar una esquina para el negocio del barrio. Cuando el jefe desaparece, la calle le pasa la cuenta y su familia le da la espalda a la plata sucia. Su hermana Camila lo vio todo y hoy lo cuenta sin filtros en un pódcast.',
   coincidencia: '98% para ti',
   anio: '2026',
   clasificacion: '16+',
@@ -109,6 +109,67 @@ const TESTIMONIOS_FOTO = [
     titulo: 'De mi promoción quedamos tres',
     testimonio: '"En los noventa ponían precio a cada uno de nosotros. Salía a patrullar sin saber si iba a volver a ver a mis hijas."',
     portada: archivo('selva.jpg'),
+  },
+]
+
+// Historias de vida de los 4 personajes de la serie, para leer completas (ficticias)
+const HISTORIAS = [
+  {
+    nombre: 'Santiago',
+    edad: '17 años',
+    rol: 'El protagonista',
+    titulo: 'Los tenis blancos',
+    foto: archivo('historia-santiago.jpg'),
+    parrafos: [
+      'En el barrio todos le decían Santi y todos lo conocían por la cancha. Tenía diecisiete años y vivía con su mamá, su hermana Camila y su abuelo en una casa de la loma. Llevaba meses diciendo que antes de los veinte iba a ser millonario. No sabía cómo. Solo sabía que no quería vivir como su mamá, que limpiaba casas de seis de la mañana a seis de la tarde y aun así no le alcanzaba.',
+      'La respuesta le llegó en una caja: unos tenis blancos de paquete que le regaló un muchacho mayor en la cancha. "Para que vea que con nosotros sí se progresa", le dijo. A la semana siguiente Santi ya estaba parado en una esquina, vigilando la cuadra para el negocio del barrio, con el celular en la mano, avisando quién entraba y quién salía.',
+      'Al principio la plata llegaba fácil y parecía mucha. Santi la dejaba sobre la mesa de la cocina como quien trae un trofeo. Pero su mamá nunca la recogió: la devolvía empujando los billetes, sin decir nada. El abuelo dejó de hablarle. Camila lo enfrentó en la sala y él le contestó que ella no entendía nada.',
+      'Lo que nadie le había contado es que en ese negocio nadie es dueño de nada. Una noche el jefe desapareció, y con él se fueron la protección, la plata y las promesas. Al otro día empezaron a llamar a Santi para cobrarle lo que se había perdido. No tenía con qué pagar, y la calle no perdona deudas.',
+      'Esa madrugada metió en un morral la ropa que pudo y salió corriendo, sin despedirse de nadie. Los tenis blancos quedaron tirados en un andén. Desde entonces su familia no sabe con certeza dónde está.',
+      'Santi quería ser millonario antes de los veinte. A los diecisiete ya lo había perdido todo: su casa, su cancha, su familia y su nombre en el barrio. Nada de lo que le prometieron era verdad.',
+    ],
+  },
+  {
+    nombre: 'Marta',
+    edad: '45 años',
+    rol: 'La mamá',
+    titulo: 'La plata sobre la mesa',
+    foto: archivo('historia-marta.jpg'),
+    parrafos: [
+      'Marta crió sola a Camila y a Santi. Limpia casas de lunes a sábado: sale a las cinco de la mañana y vuelve de noche. Nunca le sobró nada, pero a sus hijos nunca les faltaron la comida ni los cuadernos.',
+      'La primera vez que Santi llegó con un fajo de billetes y lo puso sobre la mesa de la cocina, ella entendió todo sin preguntar. Nadie de diecisiete años gana esa plata honradamente en una semana. Empujó los billetes de vuelta hacia él. Él los volvió a dejar. Ella los volvió a empujar. Así estuvieron semanas.',
+      '"Esa plata tiene sangre de alguien, mijo", le dijo una noche. "Y si todavía no la tiene, la va a tener." Santi se encerró en su cuarto dando un portazo. Ella se quedó sentada mirando los billetes hasta la madrugada.',
+      'Darle la espalda a su propio hijo es lo más difícil que ha hecho en la vida. Pero Marta sabía que recibir esa plata era aceptar que la calle se lo podía quitar. Prefirió que él la odiara un tiempo a tener que llorarlo para siempre.',
+      'Lo vio irse con el morral desde la puerta y no alcanzó a decirle nada. Hoy acompaña a otras mamás del barrio en un grupo de la parroquia y les repite lo mismo: "Esa plata no saca a nadie de la pobreza. Lo único que hace es ponerle precio a la vida de nuestros hijos."',
+    ],
+  },
+  {
+    nombre: 'Don Gilberto',
+    edad: '76 años',
+    rol: 'El abuelo',
+    titulo: 'Esa película ya la vi',
+    foto: archivo('historia-gilberto.jpg'),
+    parrafos: [
+      'Gilberto llegó a Medellín desde Urrao en 1971, con una maleta de cartón y un oficio: maestro de obra. Construyó la casa de la familia en la loma cuando todavía no había calles pavimentadas ni agua todo el día. Cada ladrillo lo pegó él.',
+      'En los años noventa vio cómo el barrio se llenaba de muchachos con motos y relojes que nadie sabía de dónde salían. Los vio presumir un año, dos años. Después los vio en los velorios, uno por uno. De su cuadra se fueron once. Ninguno llegó a los veinticinco.',
+      'Por eso, cuando vio los tenis blancos de su nieto, supo. Lo esperó en el pasillo y se lo dijo sin gritar: "Mijo, eso no es un regalo, es un anzuelo. Yo ya vi cómo termina esa película y no tiene final bonito". Santi bajó la cabeza y siguió de largo. Desde ese día el abuelo dejó de hablarle.',
+      'Ahora se arrepiente de ese silencio. Se culpa de haber creído que un consejo bastaba y de haber aprendido a vivir con miedo en lugar de enseñarles a sus nietos a decir que no en voz alta.',
+      'Hoy le cuenta su historia a cualquier pelado que se siente con él en la tienda de la esquina. Les habla de los once de su cuadra, de los nombres que ya nadie recuerda y de las mamás que todavía los lloran. "En la televisión los muestran ricos y famosos", dice. "A mí me tocó enterrarlos a los diecinueve."',
+    ],
+  },
+  {
+    nombre: 'Camila',
+    edad: '19 años',
+    rol: 'La hermana',
+    titulo: 'La voz del pódcast',
+    foto: archivo('historia-camila.jpg'),
+    parrafos: [
+      'Camila lo vio todo desde el principio: los tenis nuevos, el celular que vibraba a toda hora, las noches en que su hermano no llegaba y los billetes sobre la mesa que su mamá se negaba a tocar.',
+      'Lo enfrentó una noche en la sala. Le gritó, lloró y le rogó que se saliera mientras podía. Santi le dijo que ella no entendía, que en unos años iban a vivir en otra parte gracias a él. Camila se acuerda de esa frase cada vez que alguien le habla de "plata fácil".',
+      'Cuando su hermano huyó, sintió rabia, miedo y culpa al mismo tiempo. Durante semanas no fue capaz de pasar por la esquina donde quedaron los tenis. Fue su abuelo quien le dijo: "Usted sabe hablar, mija. Cuente lo que vio, antes de que otros lo cuenten bonito".',
+      'Así nació su pódcast. Lo graba en un estudio comunitario del barrio, con un micrófono prestado, y habla sin filtros: de cómo reclutan a los pelados con regalos, de cómo los ponen a vigilar esquinas y de cómo, cuando el jefe desaparece, los que pagan son siempre los de abajo. Entrevista a mamás, a profesores y a muchachos que lograron salirse.',
+      'Cada noche que puede enciende una vela junto a una placa con el nombre de su hermano, para que nadie en el barrio lo olvide. "Esto no es una serie de televisión", dice al empezar cada episodio. "Aquí no hay patrones ni lujos. Hay familias rotas y pelados que creyeron que unos tenis valían más que su vida."',
+    ],
   },
 ]
 
@@ -463,6 +524,84 @@ function ModalSerie({ inicial, autoplay, onClose }) {
   )
 }
 
+// Tarjeta de un personaje: al hacer clic se abre su historia completa
+function TarjetaHistoria({ h, onLeer }) {
+  return (
+    <button
+      onClick={onLeer}
+      className="group relative aspect-video w-[75vw] flex-none overflow-hidden rounded-md bg-zinc-900 text-left ring-red-600 transition duration-300 hover:z-10 hover:scale-105 hover:ring-2 focus-visible:outline-none focus-visible:ring-2 sm:w-[45vw] md:w-auto"
+    >
+      <img src={h.foto} alt="" width="960" height="540" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+      <span className="absolute left-2 top-1 text-lg font-black text-red-600">N</span>
+      <span className="absolute right-2 top-2 rounded bg-white px-1.5 py-0.5 text-[10px] font-bold uppercase text-black">Leer historia</span>
+      <div className="absolute inset-x-0 bottom-0 p-3">
+        <p className="text-base font-black uppercase leading-tight tracking-tight md:text-lg">{h.nombre}</p>
+        <p className="text-xs text-gray-300">
+          {h.rol} · {h.edad}
+        </p>
+        <p className="mt-1 text-xs italic text-gray-200">«{h.titulo}»</p>
+      </div>
+    </button>
+  )
+}
+
+// Historia completa de un personaje, con letra grande y renglones cómodos para leer
+function ModalHistoria({ h, onClose }) {
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [onClose])
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Historia de ${h.nombre}`}
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/85 px-2 py-6 md:py-10"
+      onClick={onClose}
+    >
+      <article className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-lg bg-[#181818] shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <button
+          onClick={onClose}
+          aria-label="Cerrar"
+          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/70 text-xl hover:bg-black"
+        >
+          ✕
+        </button>
+        <div className="relative aspect-video w-full">
+          <img src={h.foto} alt={h.nombre} width="960" height="540" className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#181818] via-transparent to-transparent" />
+        </div>
+
+        <div className="px-5 pb-10 md:px-14 md:pb-14">
+          <p className="text-xs font-bold tracking-[0.3em] text-red-600">
+            {SERIE.titulo.toUpperCase()} · {h.rol.toUpperCase()}
+          </p>
+          <h3 className="mt-2 text-4xl font-black uppercase leading-none md:text-5xl">{h.nombre}</h3>
+          <p className="mt-2 text-gray-400">
+            {h.edad} · «{h.titulo}»
+          </p>
+          <div className="mt-8 space-y-5 font-serif text-lg leading-relaxed text-gray-200 md:text-xl md:leading-relaxed">
+            {h.parrafos.map((p) => (
+              <p key={p.slice(0, 24)}>{p}</p>
+            ))}
+          </div>
+          <p className="mt-10 border-t border-zinc-700 pt-5 text-sm text-gray-500">
+            Historia ficticia. Si un niño, niña o adolescente está en riesgo de reclutamiento, en Colombia puedes llamar gratis a
+            la Línea 141 del ICBF.
+          </p>
+        </div>
+      </article>
+    </div>
+  )
+}
+
 function Footer() {
   return (
     <footer className="mx-auto max-w-5xl px-4 py-12 text-sm text-gray-500 md:px-12">
@@ -482,8 +621,10 @@ function Footer() {
 export default function App() {
   const [intro, setIntro] = useState(true)
   const [serie, setSerie] = useState(null) // null = cerrada; { autoplay } = abierta
+  const [historia, setHistoria] = useState(null) // personaje cuya historia se está leyendo
   const terminarIntro = useCallback(() => setIntro(false), [])
   const cerrar = useCallback(() => setSerie(null), [])
+  const cerrarHistoria = useCallback(() => setHistoria(null), [])
 
   const tarjetaSerie = {
     titulo: SERIE.titulo,
@@ -502,17 +643,23 @@ export default function App() {
         <Fila titulo="Testimonios en video">
           <Tarjeta t={tarjetaSerie} insignia={`${SERIE.episodios.length} episodios`} onPlay={() => setSerie({ autoplay: false })} />
           {TESTIMONIOS_VIDEO.map((t) => (
-            <Tarjeta key={t.nombre} t={t} />
+            <Tarjeta key={t.nombre} t={t} insignia="Próximamente" />
+          ))}
+        </Fila>
+        <Fila titulo={`Historias de ${SERIE.titulo}`}>
+          {HISTORIAS.map((h) => (
+            <TarjetaHistoria key={h.nombre} h={h} onLeer={() => setHistoria(h)} />
           ))}
         </Fila>
         <Fila titulo="Más voces de Colombia">
           {TESTIMONIOS_FOTO.map((t) => (
-            <Tarjeta key={t.nombre} t={t} />
+            <Tarjeta key={t.nombre} t={t} insignia="Próximamente" />
           ))}
         </Fila>
       </main>
       <Footer />
       {serie && <ModalSerie inicial={0} autoplay={serie.autoplay} onClose={cerrar} />}
+      {historia && <ModalHistoria h={historia} onClose={cerrarHistoria} />}
     </div>
   )
 }
